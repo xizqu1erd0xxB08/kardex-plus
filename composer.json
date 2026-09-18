@@ -1,0 +1,15 @@
+{
+    "name": "izquierdo/kardex-plus",
+    "autoload": {
+        "psr-4": {
+            "Izquierdo\\KardexPlus\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Juan Izquierdo",
+            "email": "jdizquierdob080708@outlook.com"
+        }
+    ],
+    "require": {}
+}
