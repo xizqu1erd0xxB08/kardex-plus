@@ -1,2 +1,12 @@
+# /vendor/ es la carpeta que contiene Composer, el gestor de dependencias de PHP
 /vendor/
+
+# .env contiene las credenciales reales de base de datos
 .env
+
+# *.log son archivos de registro/errores que la app genera, son "basura" regenerable, no código
+*.log
+
+# Configuración personal de los editores de código, específica de esta computadora e irrelevante para otros desarrolladores
+/.idea/
+/.vscode/

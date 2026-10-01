@@ -1,0 +1,18 @@
+# Este archivo define el comportamiento de enrutamiento de la app (toda petición pasa pr el index.php).
+
+# Encender el motor de reescritura de URLs para esta carpeta (public/). Sin esto, todas las reglas de este archivo se ignorarán
+RewriteEngine On
+
+# una condición: "solo aplica la regla de abajo SI la ruta solicitada NO corresponde a un archivo real que exista en el disco"
+# !-f significa "no es un archivo"
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# y tampoco corresponde a una carpeta real que exista" (!-d, "no es un directorio").
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# si ambas condiciones de arriba se cumplieron (no es archivo real, no es carpeta real), entonces reescribe la petición
+# hacia index.php". El ^ es un patrón que significa "cualquier cosa" (técnicamente, "el inicio de la cadena", pero sin
+# nada más especificado, coincide con toda ruta). QSA significa Query String Append — si la URL original tenía algo como
+# ?activo=1, esa parte se conserva y se le sigue pasando a index.php. L significa Last — "esta es la última regla a aplicar,
+# no sigas evaluando más reglas después de esta".
+RewriteRule ^ index.php [QSA,L]
