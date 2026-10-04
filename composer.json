@@ -11,5 +11,8 @@
             "email": "jdizquierdob080708@outlook.com"
         }
     ],
-    "require": {}
+    "require": {
+        "vlucas/phpdotenv": "^5.7",
+      "ext-pdo": "*"
+    }
 }
