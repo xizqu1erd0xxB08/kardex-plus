@@ -52,7 +52,7 @@ final class Router
                 }
             }
 
-            if (!empty($metodosPermitidos)) {
+            if ($metodosPermitidos !== []) {
                 return [
                     'codigoHttp' => 405,
                     'cuerpo' => [
