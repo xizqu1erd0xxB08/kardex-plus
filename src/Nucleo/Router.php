@@ -19,13 +19,6 @@ final class Router
      */
     private array $rutas = [];
 
-    /* Esta función crea una sección (si no existe) de métodos http (GET, POST, PUT, PATCH o DELETE) y le asigna la ruta
-    específica con su función callable correspondiente a la ruta.*/
-    private function agregarRuta(string $metodo, string $ruta, callable $accion): void
-    {
-        $this->rutas[$metodo][$ruta] = $accion;
-    }
-
     // Registra una ruta GET y devuelve el mismo Router (self), para poder encadenar llamadas
     public function get(string $ruta, callable $accion): self
     {
@@ -44,13 +37,8 @@ final class Router
     {
         // Si no hay nada registrado para esta combinación, responder 405 o 404 y salir
         if (!isset($this->rutas[$metodo][$ruta])) {
-            $metodosPermitidos = [];
 
-            foreach ($this->rutas as $metodoRegistrado => $rutasDeEseMetodo) {
-                if (isset($rutasDeEseMetodo[$ruta])) {
-                    $metodosPermitidos[] = $metodoRegistrado;
-                }
-            }
+            $metodosPermitidos = $this->metodosPermitidosPara($ruta);
 
             if ($metodosPermitidos !== []) {
                 return [
@@ -81,5 +69,30 @@ final class Router
     public function mostrarRutas(): array
     {
         return $this->rutas;
+    }
+
+    /* Esta función crea una sección (si no existe) de métodos http (GET, POST, PUT, PATCH o DELETE) y le asigna la ruta
+    específica con su función callable correspondiente a la ruta. */
+    private function agregarRuta(string $metodo, string $ruta, callable $accion): void
+    {
+        $this->rutas[$metodo][$ruta] = $accion;
+    }
+
+    /**
+     * Devuelve los métodos HTTP bajo los que la ruta está registrada
+     *
+     * @return string[]
+     */
+    private function metodosPermitidosPara(string $ruta): array
+    {
+        $metodosPermitidos = [];
+
+        foreach ($this->rutas as $metodoRegistrado => $rutasDeEseMetodo) {
+            if (isset($rutasDeEseMetodo[$ruta])) {
+                $metodosPermitidos[] = $metodoRegistrado;
+            }
+        }
+
+        return $metodosPermitidos;
     }
 }
