@@ -82,4 +82,4 @@ $rutaFinal = quitarPrefijoBase($rutaSolicitada, $rutaBase);
 $metodoSolicitado = $_SERVER['REQUEST_METHOD'];
 
 $resultado = $router->despachar($metodoSolicitado, $rutaFinal);
-enviarRespuestaJson($resultado['cuerpo'], $resultado['codigoHttp']);
+enviarRespuestaJson($resultado['cuerpo'], $resultado['codigoHttp'], $resultado['encabezados'] ?? []);
