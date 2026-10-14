@@ -48,6 +48,7 @@ final class Router
                         'mensaje' => 'método no válido para esta ruta',
                         'metodosPermitidos' => implode(', ', $metodosPermitidos),
                     ],
+                    'encabezados' => ['Allow' => $metodosPermitidos],
                 ];
             }
 
