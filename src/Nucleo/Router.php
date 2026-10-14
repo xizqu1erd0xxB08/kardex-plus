@@ -1,25 +1,17 @@
 <?php
-/*
-Esta clase se encargará de:
-    - registrar rutas;
-    - buscar una ruta;
-    - comprobar el método HTTP;
-    - ejecutar la acción correspondiente;
-    - responder con 404 si no existe.
-*/
 declare(strict_types=1);
 
-// Crear clase Router para representar el componente encargado del enrutamiento
+// Crea clase Router para representar el componente encargado del enrutamiento
 final class Router
 {
     /**
-     * Crear libreta de rutas para que el Router las identifique y ejecute las acciones según corresponda
+     * Crea libreta de rutas para que el Router las identifique y ejecute las acciones según corresponda
      *
      * @var array<string, array<string, callable>>
      */
     private array $rutas = [];
 
-    // Registra una ruta GET y devuelve el mismo Router (self), para poder encadenar llamadas
+    // Registra una ruta GET y devuelve el mismo Router (self), para encadenar llamadas
     public function get(string $ruta, callable $accion): self
     {
         $this->agregarRuta('GET', $ruta, $accion);
@@ -35,9 +27,8 @@ final class Router
     // Busca la acción registrada para cada método + ruta y la ejecuta. Devuelve el array de respuesta
     public function despachar(string $metodo, string $ruta): array
     {
-        // Si no hay nada registrado para esta combinación, responder 405 o 404 y salir
+        // Si no existe, pregunta qué métodos permiten esta ruta; si hay alguno, 405; si no, 404.
         if (!isset($this->rutas[$metodo][$ruta])) {
-
             $metodosPermitidos = $this->metodosPermitidosPara($ruta);
 
             if ($metodosPermitidos !== []) {
@@ -46,7 +37,6 @@ final class Router
                     'cuerpo' => [
                         'estado' => 'error',
                         'mensaje' => 'método no válido para esta ruta',
-                        'metodosPermitidos' => implode(', ', $metodosPermitidos),
                     ],
                     'encabezados' => ['Allow' => $metodosPermitidos],
                 ];
@@ -64,7 +54,7 @@ final class Router
         // Llegar aquí indica que la combinación de método + ruta sí existe
         $accion = $this->rutas[$metodo][$ruta]; // Sacar la función del array (aún no se ejecuta)
 
-        return $accion(); // Ejecutar la función del array, su resultado es el valor de despachar()
+        return $accion(); // Ejecuta la función del array, su resultado es el valor de despachar()
     }
 
     public function mostrarRutas(): array
@@ -72,7 +62,7 @@ final class Router
         return $this->rutas;
     }
 
-    /* Esta función crea una sección (si no existe) de métodos http (GET, POST, PUT, PATCH o DELETE) y le asigna la ruta
+    /* Crea una sección (si no existe) de métodos http (GET, POST, PUT, PATCH o DELETE) y le asigna la ruta
     específica con su función callable correspondiente a la ruta. */
     private function agregarRuta(string $metodo, string $ruta, callable $accion): void
     {
