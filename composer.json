@@ -1,5 +1,8 @@
 {
     "name": "izquierdo/kardex-plus",
+    "description": "Sistema avanzado de inventario y ventas con facturación y reportes",
+    "type": "project",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "Izquierdo\\KardexPlus\\": "src/"
@@ -12,7 +15,8 @@
         }
     ],
     "require": {
+        "php": "^8.4",
         "vlucas/phpdotenv": "^5.7",
-      "ext-pdo": "*"
+        "ext-pdo": "*"
     }
 }
