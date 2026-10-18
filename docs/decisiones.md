@@ -160,3 +160,8 @@ sintaxis en el editor.
 como Apache y PHP utilicen herramientas comunes sin necesidad de reescribirlas desde cero.
 * **OpenSSL:** Kit de herramientas de código abierto encargado de gestionar la seguridad y el cifrado de datos (SSL/TLS).
 Garantiza que las conexiones externas y el tráfico de datos en el servidor local viajen de manera segura.
+
+## Agregación del driver de Mysql para PDO
+Se añadió el driver `"ext-pdo_mysql": "*"` dentro de `composer.json` para que Composer verifique el entorno antes de ejecutar,
+y en caso de error, falle con un mensaje claro.
+
