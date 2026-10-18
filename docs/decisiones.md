@@ -123,3 +123,40 @@ la aplicación hacia Controller → Service → Repository.
 > lógica de negocio.
 > **rutas.php:** es la cnfiguración de las rutas de la app, es decir, el archivo que define qué rutas existen.
 > **index.php:** recibe/prepara la petición http y pone en marcha la app.
+
+## Actualización del Entorno Local a PHP 8.4.26
+Durante el desarrollo de proyecto, para habilitar las nuevas características de lenguaje y garantizar la compatibilidad 
+del proyecto, se migró el entorno de desarrollo local( de la versión anterior a **PHP 8.4.26**.
+
+### 1. Modificaciones en las variables de entorno (PATH)
+* Se eliminó la ruta del PHP antiguo del PATH del sistema
+* Se añadió la nueva ruta del intérprete: `C:\xampp\php`.
+* **Verificación:** al ejecutar `php -v` en la terminal, el sistema reconoce correctamente `PHP 8.4.26`.
+
+### 2. Configuración de Apache y Reemplazo de DLLs (OpenSSL)
+En lugar de modificar manualmente el archivo de configuración `httpd.conf`, se optó por una solución directa aprovechando
+la estructura de XAMPP:
+* **Inyección de dependencias:** se copiaron los archivos de bibliotecas de OpenSSL (`libcrypto-3-x64.dll`, `libssh2.dll` 
+y `libssl-3-x64.dll`) y se pegaron directamente en la ruta `xampp/apache/bin/`
+* **Efecto secundario explicado:** Al colocar estos archivos en el directorio binario de Apache, el servidor web priorizó 
+estas librerías sobre las suyas. Esto provocó que el token de OpenSSL del servidor cambiara de `3.1.3` a `3.0.22`, 
+confirmando que Apache ahora corre bajo el entorno seguro provisto por PHP 8.4.26 de manera limpia.
+
+### 3. Ajustes en el archivo de configuración  de PHP (`php.ini`)
+Partiendo del archivo plantilla `php.ini-development`, se renombró a `php.ini` y se activaron las siguientes extensiones
+esenciales (removiendo el punto y coma `;` inicial):
+* `extension=curl` (para peticiones HTTP externas)
+* `extension=mbstring` (para el manejo de cadenas de texto multibyte)
+* `extension=openssl` (para conexiones seguras y cifrado)
+* `extension=pdo_mysql` y `extension=mysqli` (para la conexión con la base de datos local)
+
+### 4. Configuración del IDE (PhpStorm)
+* Se actualizó el **PHP Languaje Level** a la versión `8.4` desde *Settings -> PHP* para habilitar el soporte de la nueva
+sintaxis en el editor.
+* Se configuró el **CLI Interpreter** apuntando al ejecutable `php.exe` de la nueva carpeta de PHP 8.4.
+
+### Glosario técnico de conceptos aplicados
+* **DLL (Dynamic Link Library):** Archivos externos que contienen código y funciones compartidas. Permiten que programas
+como Apache y PHP utilicen herramientas comunes sin necesidad de reescribirlas desde cero.
+* **OpenSSL:** Kit de herramientas de código abierto encargado de gestionar la seguridad y el cifrado de datos (SSL/TLS).
+Garantiza que las conexiones externas y el tráfico de datos en el servidor local viajen de manera segura.
