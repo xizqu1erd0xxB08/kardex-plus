@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once dirname(__DIR__, 1) . "/src/Nucleo/Respuesta.php";
+
 /**
  * Envía una respuesta HTTP en formato JSON y termina la ejecución.
  *
