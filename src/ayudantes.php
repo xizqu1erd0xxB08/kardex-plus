@@ -1,36 +1,22 @@
 <?php
 declare(strict_types=1);
 
-require_once dirname(__DIR__, 1) . "/src/Nucleo/Respuesta.php";
+use Izquierdo\KardexPlus\Nucleo\Respuesta;
 
-/**
- * Envía una respuesta HTTP en formato JSON y termina la ejecución.
- *
- * @param array<string, mixed> $datos Datos a enviar con claves string y valores de cualquier tipo
- * @param array<string, string> $encabezados Cabeceras a enviar tendrán formato: nombre => valor
- */
-function enviarRespuestaJson(array $datos, int $codigoHttp, array $encabezados = []): void
+// Envía una respuesta HTTP en formato JSON y termina la ejecución.
+function enviarRespuestaJson(Respuesta $respuesta): void
 {
     // Indica encabezado de la respuesta HTTP
     header('Content-Type: application/json; charset=utf-8');
 
     // Indica encabezados extra de la respuesta HTTP
-    foreach ($encabezados as $nombre => $valor) {
-        header($nombre . ': '. implode(', ', $valor));
+    foreach ($respuesta->encabezados as $nombreEncabezado => $valorEncabezado) {
+        header($nombreEncabezado . ': ' . $valorEncabezado);
     }
 
-    http_response_code($codigoHttp);
+    http_response_code($respuesta->codigoHttp);
 
-    /* Envía respuesta HTTP en formato JSON con banderas útiles para mejorar la legibilidad y depuración.
-    - JSON_UNESCAPED_UNICODE: desactiva el escapar caracteres especiales (como á) en formato unicode, con el fin de que
-    se vean claramente textos como 'Hola ángel' en vez de 'Hola \u00e1ngel'.
-    - JSON_THROW_ON_ERROR: en caso de un error, en vez de retornar 'false', obtiene una excepción real (JsonException)
-    que puede capturar y manejar explícitamente.
-    - JSON_UNESCAPED_SLASHES: por defecto, json_encode() escapa las barras / como \/ (así que 'https://miweb.com' se
-    volvería 'https:\/\/miweb.com'. Esta bandera evita el escape innecesario de las barras /, haciendo más legibles
-    las URL dentro del JSON.
-    El '|', activa simultáneamente estas tres opciones. */
-    echo json_encode($datos, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
+    echo json_encode($respuesta->cuerpo, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
     exit();
 }
 

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace Izquierdo\KardexPlus\Nucleo;
+
 // Crea clase Router para representar el componente encargado del enrutamiento
 final class Router
 {
@@ -24,37 +26,24 @@ final class Router
         return $this;
     }
 
-    // Busca la acción registrada para cada método + ruta y la ejecuta. Devuelve el array de respuesta
-    public function despachar(string $metodo, string $ruta): array
+    // Busca la acción registrada para cada método + ruta y la ejecuta. Devuelve el paquete de Respuesta
+    public function despachar(string $metodo, string $ruta): Respuesta
     {
         // Si no existe, pregunta qué métodos permiten esta ruta; si hay alguno, 405; si no, 404.
         if (!isset($this->rutas[$metodo][$ruta])) {
             $metodosPermitidos = $this->metodosPermitidosPara($ruta);
 
             if ($metodosPermitidos !== []) {
-                return [
-                    'codigoHttp' => 405,
-                    'cuerpo' => [
-                        'estado' => 'error',
-                        'mensaje' => 'método no válido para esta ruta',
-                    ],
-                    'encabezados' => ['Allow' => $metodosPermitidos],
-                ];
+                return Respuesta::metodoNoPermitido($metodosPermitidos);
             }
 
-            return [
-                'codigoHttp' => 404,
-                'cuerpo' => [
-                    'estado' => 'error',
-                    'mensaje' => 'ruta no encontrada',
-                ],
-            ];
+            return Respuesta::noEncontrada();
         }
 
         // Llegar aquí indica que la combinación de método + ruta sí existe
-        $accion = $this->rutas[$metodo][$ruta]; // Sacar la función del array (aún no se ejecuta)
+        $accion = $this->rutas[$metodo][$ruta]; // Sacar la función (aún no se ejecuta)
 
-        return $accion(); // Ejecuta la función del array, su resultado es el valor de despachar()
+        return $accion(); // Ejecuta la función, su resultado es el valor de despachar()
     }
 
     public function mostrarRutas(): array

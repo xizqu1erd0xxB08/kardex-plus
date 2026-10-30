@@ -1,21 +1,20 @@
 <?php
 declare(strict_types=1);
 
-/* 'final' indica que la clase NO puede ser heredada porque la clase es diseñada específicamente para gestionar la
-conexión, además, evita que alguien modifique el comportamiento de esta mediante herencia  */
+namespace Izquierdo\KardexPlus\BaseDatos;
+
+use PDO;
+
 final class Conexion
 {
-    /* 'static' -> propiedad perteneciente a la clase, se accede desde 'Conexion::$instancia', NO mediante '$conexion->instancia'.
-    Crea una referencia compartida a la conexión administrada por la clase. */
+    // Crea una referencia compartida a la conexión administrada por la clase. */
     private static ?PDO $instancia = null;
 
     public static function obtenerConexion(): PDO
     {
-        /* 'self' hace referencia a la propia clase. Por ello, se relaciona con 'static' porque los miembros estáticos se
-        acceden desde la clase ('self::$instancia') porque $instancia es 'static'.
-        Si la conexión no existe (es null), la crea una sola vez y la reutiliza durante la petición. */
+        // Si la conexión no existe (es null), la crea una sola vez y la reutiliza durante la petición.
         if (self::$instancia === null) {
-            # Construye DSN usando los valores de configuración del entorno.
+            // Construye DSN usando los valores de configuración del entorno.
             $dsn = sprintf(
                 'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
                 $_ENV['DB_HOST'],
